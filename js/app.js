@@ -11,6 +11,38 @@ const formulario = document.querySelector("#nueva-cita")
 const contenedorCitas = document.querySelector("#citas")
 
 
+class Citas {
+  constructor() {
+    this.citas = []
+  }
+}
+
+class UI {
+  imprimirAlerta(mensaje, tipo) {
+    const divMensaje = document.createElement("div");
+    divMensaje.classList.add("text-center", "alert", "d-block", "col-12");
+
+    if (tipo === "error") {
+      divMensaje.classList.add("alert-danger")
+    } else {
+      divMensaje.classList.add("alert-success")
+    }
+
+    // Mensaje de error
+    divMensaje.textContent = mensaje;
+
+    // Agregar al DOM
+    document.querySelector("#contenido").insertBefore(divMensaje, document.querySelector(".agregar-cita"))
+
+    setTimeout(() => {
+      divMensaje.remove();
+    }, 5000);
+  }
+}
+
+const ui = new UI();
+const administrarCitas = new Citas();
+
 // Registrar eventos
 eventListeners()
 function eventListeners() {
@@ -20,9 +52,9 @@ function eventListeners() {
   fechaInput.addEventListener("input", datosCita)
   horaInput.addEventListener("input", datosCita)
   sintomasInput.addEventListener("input", datosCita)
+
+  formulario.addEventListener("submit", nuevaCita)
 }
-
-
 
 // Objeto con informacion de la cita
 citaObj = {
@@ -34,10 +66,23 @@ citaObj = {
   sintomas: ""
 }
 
-
-
 // Agrega datos al objeto de cita
 function datosCita(e) {
   citaObj[e.target.name] = e.target.value
   console.log(citaObj);
+}
+
+// Valida y agrega una nueva cita a la clase de citas
+function nuevaCita(e) {
+  e.preventDefault();
+
+  // Extraer informacion del objeto cita y validar
+  const { mascota, propietario, telefono, fecha, hora, sintomas } = citaObj;
+  if (mascota === "" || propietario === "" || telefono === "" || fecha === "" || hora === "" || sintomas === "") {
+
+    ui.imprimirAlerta("Todos los campos son obligatorios", "error")
+    return;
+  }
+
+  // Creando una nueva cita
 }
